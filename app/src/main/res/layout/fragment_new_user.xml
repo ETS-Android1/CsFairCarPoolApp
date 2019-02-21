@@ -29,13 +29,12 @@
             android:layout_height="wrap_content"
             android:text="I am a..."
             android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/new"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/newUser"
+            android:id="@+id/userNotOld"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="signUp"

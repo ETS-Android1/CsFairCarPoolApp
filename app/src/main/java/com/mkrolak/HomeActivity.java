@@ -9,8 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.w3c.dom.Text;
 
 
 public class HomeActivity extends FragmentActivity {
@@ -70,9 +73,12 @@ public class HomeActivity extends FragmentActivity {
 
     }
 
-    //TODO:probably make return profile picture. Should change in fragment class maybe. IDK
+    //TODO:make seperate method for retreving drawable object & rating system
     public void setProfilePic(){
         ((ImageView)mPagerAdapter.getItem(1).getView().findViewById(R.id.profilePic)).setImageResource(listOfDrawables[Integer.parseInt(mAuth.getCurrentUser().getPhotoUrl().toString().split("user")[1].replace(".png","").trim())]);
+        ((TextView)findViewById(R.id.username)).setText(mAuth.getCurrentUser().getDisplayName());
+        ((TextView)findViewById(R.id.email)).setText(mAuth.getCurrentUser().getEmail());
+
     }
 
 

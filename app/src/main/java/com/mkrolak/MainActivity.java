@@ -94,10 +94,9 @@ public class MainActivity extends FragmentActivity {
         continueToNext(v);
     }
 
-    //TODO:Make more clear on where stuff went wrong.
     public void continueSignUp(View v){
-        String email = ((((LoginFragment)((ScreenSlidePagerAdapter)mPagerAdapter).getItem(1)).getInfo()));
-        String password = (((LoginFragment)((ScreenSlidePagerAdapter)mPagerAdapter).getItem(2)).getInfo());
+        String email = ((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo()));
+        String password = (((LoginFragment)(mPagerAdapter).getItem(2)).getInfo());
         if(email.length() == 0 || password.length() == 0)return;//TODO:make say please fill in.
         email+="@cps.edu";
 
