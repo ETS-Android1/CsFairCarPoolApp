@@ -66,8 +66,11 @@ public class HomeActivity extends FragmentActivity {
 
     }
 
+    public void createListOfPickUps(){
 
+    }
 
+    //TODO:probably make return profile picture. Should change in fragment class maybe. IDK
     public void setProfilePic(){
         ((ImageView)mPagerAdapter.getItem(1).getView().findViewById(R.id.profilePic)).setImageResource(listOfDrawables[Integer.parseInt(mAuth.getCurrentUser().getPhotoUrl().toString().split("user")[1].replace(".png","").trim())]);
     }
