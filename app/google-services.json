@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "699900539235",
+    "firebase_url": "https://csfair3.firebaseio.com",
+    "project_id": "csfair3",
+    "storage_bucket": "csfair3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699900539235:android:7a4321fabcef5ddc",
+        "android_client_info": {
+          "package_name": "com.mkrolak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699900539235-60dv8r7the9om8lqbfe318unufiuo1hk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mkrolak",
+            "certificate_hash": "e4a946089a4997f5750e8bcf81b4eea2af45ec16"
+          }
+        },
+        {
+          "client_id": "699900539235-hgdsaqufm03c354jtq9apq63dgou2idc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcbjEKMKlWcskInG0TdNs8IXk9f1ePeuY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699900539235-2pgkivelpsgrphu6lrmekfkkminv521m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
