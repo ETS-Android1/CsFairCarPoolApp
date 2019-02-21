@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -89,7 +90,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void signUp(View v){
-        signup = true;
+        signup = v.getId()!=R.id.old;
         continueToNext(v);
     }
 
