@@ -13,12 +13,19 @@ import android.widget.TextView;
 public class LoginFragment extends Fragment {
     protected int mLayoutId = 0;
     protected EditText mRootView;
+    protected OnStartListener onStartListener;
 
     String s = "";
     @SuppressLint("ValidFragment")
     public LoginFragment(int layoutId){
         super();
         mLayoutId =layoutId;
+        onStartListener = new OnStartListener() {
+            @Override
+            public void onStart(View v) {
+
+            }
+        };
 
     }
 
@@ -38,9 +45,7 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // save views as variables in this method
         // "view" is the one returned from onCreateView
-        if(view.findViewById(R.id.profilePic)!=null){
-            ((HomeActivity)getActivity()).setProfilePic();
-        }
+        onStartListener.onStart(view);
         mRootView = view.findViewById(R.id.info);
     }
 
@@ -61,7 +66,9 @@ public class LoginFragment extends Fragment {
 
     }
 
-
+    public void setOnStartListener(OnStartListener onStart){
+        onStartListener = onStart;
+    }
 
     public void setErrorText(String string){
         ((TextView)getView().findViewById(R.id.error)).setText(string);
