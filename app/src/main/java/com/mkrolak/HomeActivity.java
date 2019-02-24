@@ -1,16 +1,13 @@
 package com.mkrolak;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -24,10 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 
 
@@ -52,9 +46,14 @@ public class HomeActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseAuth.getInstance();
+        FirebaseDatabase.getInstance();
         setContentView(R.layout.activity_home);
 
-        LIST_OF_DRAWABLES = new int[]{R.drawable.user0,R.drawable.user1,R.drawable.user2,R.drawable.user3,R.drawable.user4,R.drawable.user5,R.drawable.user6,R.drawable.user7,R.drawable.user8,R.drawable.user9,R.drawable.user10,R.drawable.user11,R.drawable.user12,R.drawable.user13,R.drawable.user14,R.drawable.user15,R.drawable.user16,R.drawable.user17,R.drawable.user18,R.drawable.user19,R.drawable.user20,R.drawable.user21,R.drawable.user22,R.drawable.user23};
+
+
+
 
         LAYOUT_ARRAY = new int[]{R.layout.fragment_rider,R.layout.fragment_profile,R.layout.fragment_driver};
         LAYOUT_TAGS = new String[]{"Rider","Profile","Driver"};
@@ -76,7 +75,7 @@ public class HomeActivity extends FragmentActivity {
         ((LoginFragment)mPagerAdapter.getItem(1)).setOnStartListener(new OnStartListener() {
             @Override
             public void onStart(View v) {
-                ((ImageView)mPagerAdapter.getItem(1).getView().findViewById(R.id.profilePic)).setImageResource(HomeActivity.getPictureDrawableFromUri(mAuth.getCurrentUser().getPhotoUrl()));
+                ((ImageView)mPagerAdapter.getItem(1).getView().findViewById(R.id.profilePic)).setImageResource(ProfilePictures.getPictureDrawableFromUri(mAuth.getCurrentUser().getPhotoUrl()));
                 ((TextView)findViewById(R.id.username)).setText(mAuth.getCurrentUser().getDisplayName());
                 ((TextView)findViewById(R.id.email)).setText(mAuth.getCurrentUser().getEmail());
             }
@@ -104,6 +103,7 @@ public class HomeActivity extends FragmentActivity {
 
 
 
+
     }
 
     public void logout(View v){
@@ -122,21 +122,24 @@ public class HomeActivity extends FragmentActivity {
     }
 
     public void createPickUpRequest(View v){
-        Geocoder geo = new Geocoder(this);
+        Geocoder geo = new Geocoder(this,Locale.getDefault());
         View riderActivity = mPagerAdapter.getItem(0).getView();
-        Address address = null;
+        Address address;
+
         try {
-            address = geo.getFromLocationName(((EditText)riderActivity.findViewById(R.id.pickUpAddress)).getText().toString(),1).get(0);
+            address = geo.getFromLocationName(((EditText)riderActivity.findViewById(R.id.pickUpAddress)).getText().toString(),5).get(0);
+            String time = ((EditText)riderActivity.findViewById(R.id.arrivalTime)).getText().toString();
+            int numberOfPeople = Integer.parseInt(((EditText)riderActivity.findViewById(R.id.numberOfPeople)).getText().toString());
+
+            databaseReference.push().setValue(new PickUpRequest(time,mAuth.getCurrentUser().getDisplayName(),mAuth.getCurrentUser().getPhotoUrl().toString(),numberOfPeople,(float)address.getLatitude(),(float)address.getLongitude()));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String time = ((EditText)riderActivity.findViewById(R.id.arrivalTime)).getText().toString();
-        int numberOfPeople = Integer.parseInt(((EditText)riderActivity.findViewById(R.id.numberOfPeople)).getText().toString());
 
-        databaseReference.push().setValue(new PickUpRequest(time,mAuth.getCurrentUser().getDisplayName(),mAuth.getCurrentUser().getPhotoUrl(),numberOfPeople,(float)address.getLatitude(),(float)address.getLongitude()));
+
+
     }
 
-    public static int getPictureDrawableFromUri(Uri uri){
-        return  LIST_OF_DRAWABLES[Integer.parseInt(uri.toString().split("user")[1].replace(".png","").trim())];
-    }
+
 }

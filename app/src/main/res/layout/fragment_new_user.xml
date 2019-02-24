@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="207dp"
-        android:layout_height="141dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="98dp"
         android:layout_marginTop="149dp"
         android:layout_marginEnd="98dp"
@@ -18,10 +18,8 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.425">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView7"
@@ -29,16 +27,21 @@
             android:layout_height="wrap_content"
             android:text="I am a..."
             android:textAlignment="center"
+            android:textColor="@android:color/background_light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/userNotOld"
+            style="@style/YellowButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_light"
             android:onClick="signUp"
             android:text="New User"
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/textView8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -53,6 +56,8 @@
 
             android:text="or"
             android:textAlignment="center"
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,10 +65,14 @@
 
         <Button
             android:id="@+id/old"
+            style="@style/YellowButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_light"
             android:onClick="signUp"
             android:text="Existing User"
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView8" />

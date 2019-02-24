@@ -28,4 +28,20 @@
         <item name="android:colorAccent">@android:color/white</item>
     </style>
 
+    <style name="EditTextDescriptors" parent="AppTheme">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="YellowButton" parent="@android:style/Widget.Material.Button.Borderless.Colored">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@android:color/holo_orange_light</item>
+        <item name="android:colorAccent">@android:color/white</item>
+    </style>
+
+
+
 </resources>

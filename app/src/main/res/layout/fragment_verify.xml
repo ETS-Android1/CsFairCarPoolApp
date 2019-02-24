@@ -20,14 +20,16 @@
         tools:text="@android:string/defaultMsisdnAlphaTag" />
 
     <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
+        android:id="@+id/verifyButton"
+        style="@style/YellowButton"
+        android:layout_width="192dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="106dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="106dp"
         android:onClick="isVerified"
         android:text="I have verified my email"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/verifyName" />
@@ -41,6 +43,6 @@
         android:layout_marginEnd="183dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button6"
+        app:layout_constraintTop_toBottomOf="@+id/verifyButton"
         tools:text="Default" />
 </android.support.constraint.ConstraintLayout>

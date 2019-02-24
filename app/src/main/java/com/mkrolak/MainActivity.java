@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class MainActivity extends FragmentActivity {
@@ -37,8 +39,11 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseApp.clearInstancesForTest();
         FirebaseApp.initializeApp(this);
         FirebaseAuth.getInstance();
+        FirebaseDatabase.getInstance();
 
         if(FirebaseAuth.getInstance().getCurrentUser()!=null && FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()){
             startActivity(new Intent(MainActivity.this,HomeActivity.class));
@@ -163,6 +168,7 @@ public class MainActivity extends FragmentActivity {
                         startActivity(new Intent(MainActivity.this,HomeActivity.class));
                     }else{
                         ((LoginFragment)mPagerAdapter.getItem(mPager.getCurrentItem())).setErrorText("You have not verified your email address");
+                        mPagerAdapter.getItem(mPager.getCurrentItem()).getView().findViewById(R.id.verifyButton).setVisibility(View.VISIBLE);
                     }
                 }else{
                     ((LoginFragment)mPagerAdapter.getItem(mPager.getCurrentItem())).setErrorText(task.getException().toString());
