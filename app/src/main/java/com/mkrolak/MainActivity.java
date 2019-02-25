@@ -133,7 +133,7 @@ public class MainActivity extends FragmentActivity {
                         }
 
                     } else {
-                        ((LoginFragment) ((ScreenSlidePagerAdapter) (mPagerAdapter)).getItem(2)).setErrorText(task.getException().toString());
+                        ((LoginFragment) ((mPagerAdapter)).getItem(2)).setErrorText(task.getException().toString());
                     }
                 }
             });

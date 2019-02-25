@@ -28,10 +28,10 @@
         <item name="android:colorAccent">@android:color/white</item>
     </style>
 
-    <style name="EditTextDescriptors" parent="AppTheme">
+    <style name="EditTextDescriptors" parent="Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:colorAccent">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="YellowButton" parent="@android:style/Widget.Material.Button.Borderless.Colored">
