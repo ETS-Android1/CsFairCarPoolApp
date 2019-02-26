@@ -2,6 +2,7 @@ package com.mkrolak;
 
 
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -52,21 +53,20 @@ public class EditProfileActivity extends FragmentActivity {
                 TableRow tableRow = null;
                 for(int i=0;i<ProfilePictures.LIST_OF_DRAWABLES.length;i++) {
                     if(i%3==0){
-                        if(i!=0){
-                            layout.addView(tableRow,new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                        }
                         tableRow = new TableRow(EditProfileActivity.this);
-                        tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                        tableRow.setLayoutParams(new TableLayout.LayoutParams(TabLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                        layout.addView(tableRow,i/3);
                     }
                     ImageView image = new ImageView(EditProfileActivity.this);
-                    image.setLayoutParams(new android.view.ViewGroup.LayoutParams(150,150));
+                    image.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                     image.setMaxHeight(150);
                     image.setMaxWidth(150);
                     image.setImageResource(ProfilePictures.LIST_OF_DRAWABLES[i]);
 
                     tableRow.addView(image);
+
                 }
-                layout.addView(tableRow,new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+
             }
         });
 
