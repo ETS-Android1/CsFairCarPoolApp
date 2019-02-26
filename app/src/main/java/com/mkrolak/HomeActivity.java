@@ -1,5 +1,6 @@
 package com.mkrolak;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -10,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +29,6 @@ import java.util.Locale;
 
 public class HomeActivity extends FragmentActivity {
 
-    public static int[] LIST_OF_DRAWABLES = {0};
     private int[] LAYOUT_ARRAY;
     private String[] LAYOUT_TAGS;
 
@@ -103,7 +104,13 @@ public class HomeActivity extends FragmentActivity {
 
 
 
+    }
 
+
+    public void goToEditProfile(View v){
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, findViewById(R.id.profilePic), "profilePic");
+
+        startActivity(new Intent(HomeActivity.this,EditProfileActivity.class),options.toBundle());
     }
 
     public void logout(View v){

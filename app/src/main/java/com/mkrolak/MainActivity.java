@@ -168,6 +168,7 @@ public class MainActivity extends FragmentActivity {
                         startActivity(new Intent(MainActivity.this,HomeActivity.class));
                     }else{
                         ((LoginFragment)mPagerAdapter.getItem(mPager.getCurrentItem())).setErrorText("You have not verified your email address");
+                        //TODO fix visibility
                         mPagerAdapter.getItem(mPager.getCurrentItem()).getView().findViewById(R.id.verifyButton).setVisibility(View.VISIBLE);
                     }
                 }else{
