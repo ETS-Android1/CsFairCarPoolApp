@@ -70,7 +70,6 @@ public class HomeActivity extends FragmentActivity {
             tabLayout.getTabAt(i).setText(LAYOUT_TAGS[i]);
 
         }
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mPager.setCurrentItem(1);
 
         ((LoginFragment)mPagerAdapter.getItem(1)).setOnStartListener(new OnStartListener() {

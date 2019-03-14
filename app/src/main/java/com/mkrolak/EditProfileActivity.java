@@ -2,17 +2,20 @@ package com.mkrolak;
 
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class EditProfileActivity extends FragmentActivity {
 
@@ -21,7 +24,10 @@ public class EditProfileActivity extends FragmentActivity {
     private NonSwipingPagerView mPager;
     private ScreenSlidePagerAdapter mPagerAdapter;
 
+
     private int[] LAYOUT_ARRAY;
+
+    private Uri tempImageUri;
 
     //TODO fix the fragment that doesnt display the images in the table view
 
@@ -34,10 +40,12 @@ public class EditProfileActivity extends FragmentActivity {
 
         LAYOUT_ARRAY = new int[]{R.layout.fragment_edit_profile,R.layout.fragment_profile_pictures};
 
+        tempImageUri = mAuth.getCurrentUser().getPhotoUrl();
         mPager = findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(),LAYOUT_ARRAY);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPagingEnabled(false);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         ((LoginFragment)mPagerAdapter.getItem(0)).setOnStartListener(new OnStartListener() {
             @Override
@@ -58,10 +66,18 @@ public class EditProfileActivity extends FragmentActivity {
                         layout.addView(tableRow,i/3);
                     }
                     ImageView image = new ImageView(EditProfileActivity.this);
-                    image.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                    image.setMaxHeight(150);
-                    image.setMaxWidth(150);
+                    image.setLayoutParams(new TableRow.LayoutParams(360, 360));
                     image.setImageResource(ProfilePictures.LIST_OF_DRAWABLES[i]);
+                    image.setId(i);
+                    image.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ((ImageView)mPagerAdapter.getItem(0).getView().findViewById(R.id.profileEdit)).setImageDrawable(((ImageView)view).getDrawable());
+                            tempImageUri = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/user" + view.getId());
+                            mPager.setCurrentItem(0);
+                        }
+                    });
+
 
                     tableRow.addView(image);
 
@@ -80,6 +96,11 @@ public class EditProfileActivity extends FragmentActivity {
         }else{
             super.onBackPressed();
         }
+    }
+
+    public void onApplyButtonPressed(View v){
+        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setPhotoUri(tempImageUri).build();
+        mAuth.getCurrentUser().updateProfile(userProfileChangeRequest);
     }
 
     public void onPicturePress(View v){
