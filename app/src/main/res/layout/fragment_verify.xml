@@ -8,11 +8,12 @@
 
     <TextView
         android:id="@+id/verifyName"
-        android:layout_width="wrap_content"
+        android:layout_width="156dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="205dp"
         android:layout_marginTop="232dp"
         android:layout_marginEnd="206dp"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +42,7 @@
         android:layout_marginStart="183dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="183dp"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/verifyButton"

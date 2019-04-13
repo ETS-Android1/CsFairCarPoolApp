@@ -1,6 +1,7 @@
 package com.mkrolak;
 
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -66,7 +67,7 @@ public class EditProfileActivity extends FragmentActivity {
                         layout.addView(tableRow,i/3);
                     }
                     ImageView image = new ImageView(EditProfileActivity.this);
-                    image.setLayoutParams(new TableRow.LayoutParams(360, 360));
+                    image.setLayoutParams(new TableRow.LayoutParams(360, 360,1f));
                     image.setImageResource(ProfilePictures.LIST_OF_DRAWABLES[i]);
                     image.setId(i);
                     image.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +102,9 @@ public class EditProfileActivity extends FragmentActivity {
     public void onApplyButtonPressed(View v){
         UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setPhotoUri(tempImageUri).build();
         mAuth.getCurrentUser().updateProfile(userProfileChangeRequest);
+        Intent homeActivity = new Intent(EditProfileActivity.this,HomeActivity.class);
+        homeActivity.putExtra("PIC",tempImageUri);
+        startActivity(homeActivity);
     }
 
     public void onPicturePress(View v){

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
+    style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="207dp"
-        android:layout_height="wrap_content"
+        style="@style/inlineBox"
+        android:layout_width="265dp"
+        android:layout_height="167dp"
         android:layout_marginStart="98dp"
         android:layout_marginTop="149dp"
         android:layout_marginEnd="98dp"
         android:layout_marginBottom="259dp"
         android:gravity="fill"
         android:orientation="vertical"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +25,11 @@
 
         <TextView
             android:id="@+id/textView7"
+            style="@style/infoTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="I am a..."
             android:textAlignment="center"
-            android:textColor="@android:color/background_light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -37,10 +39,10 @@
             style="@style/YellowButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_orange_light"
+            android:background="@color/colorSecondary"
             android:onClick="signUp"
             android:text="New User"
-            android:textColor="@android:color/background_light"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/textView8"
             app:layout_constraintEnd_toEndOf="parent"
@@ -51,12 +53,12 @@
 
         <TextView
             android:id="@+id/textView8"
+            style="@style/infoTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
 
+            android:layout_height="wrap_content"
             android:text="or"
             android:textAlignment="center"
-            android:textColor="@android:color/background_light"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -68,10 +70,9 @@
             style="@style/YellowButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_orange_light"
             android:onClick="signUp"
             android:text="Existing User"
-            android:textColor="@android:color/background_light"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

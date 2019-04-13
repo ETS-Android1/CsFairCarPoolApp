@@ -7,4 +7,5 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="username">Username</string>
+    <string name="USERS_DATABASE_REFERENCE">USERS</string>
 </resources>

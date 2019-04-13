@@ -6,7 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/colorAccent</item>
     </style>
+
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
@@ -22,24 +24,39 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="WhiteEditText" parent="Base.Widget.AppCompat.EditText">
+
+
+
+    <style name="WhiteEditText" parent="BaseTextTheme">
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:colorAccent">@android:color/white</item>
+        <item name="android:colorAccent">@android:color/black</item>
     </style>
 
-    <style name="EditTextDescriptors" parent="Widget.AppCompat.TextView.SpinnerItem">
-        <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
+    <style name="BaseTextTheme" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="colorAccent">@android:color/black</item>
     </style>
 
-    <style name="YellowButton" parent="@android:style/Widget.Material.Button.Borderless.Colored">
+
+    <style name="inlineBox">
+        <item name="android:background">@color/colorPrimaryLight</item>
+    </style>
+
+    <style name="infoTextView" parent="BaseTextTheme">
+        <item name="android:backgroundTint">@android:color/transparent</item>
+    </style>
+
+    <style name="EditTextDescriptors" >
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:background">@android:color/holo_orange_light</item>
-        <item name="android:colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="YellowButton" parent="BaseTextTheme">
+        <item name="android:textAlignment">center</item>
+
+        <item name="android:background">@color/colorSecondary</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
     </style>
 
 

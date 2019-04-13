@@ -7,13 +7,17 @@ import android.location.Geocoder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,6 +76,14 @@ public class HomeActivity extends FragmentActivity {
         }
         mPager.setCurrentItem(1);
 
+
+        ((LoginFragment)mPagerAdapter.getItem(0)).setOnStartListener(new OnStartListener() {
+            @Override
+            public void onStart(View v) {
+                //TODO: Check for active pickUpRequest.
+            }
+        });
+
         ((LoginFragment)mPagerAdapter.getItem(1)).setOnStartListener(new OnStartListener() {
             @Override
             public void onStart(View v) {
@@ -83,13 +95,50 @@ public class HomeActivity extends FragmentActivity {
 
         ((LoginFragment)mPagerAdapter.getItem(2)).setOnStartListener(new OnStartListener() {
             @Override
-            public void onStart(View v) {
+            public void onStart(final View v) {
                 //TODO This might break the code because adding more and more listeners is bad mkay. Just trying to see if it works at all mkay.
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot data : dataSnapshot.getChildren()){
-                            data.getValue();
+                            DatabaseObjects.PickUpRequest p = data.getValue(DatabaseObjects.PickUpRequest.class);
+                            LinearLayout l = v.findViewById(R.id.searchLayout);
+
+                            CardView cardView = new CardView(HomeActivity.this);
+                            LinearLayout linearLayoutInside = new LinearLayout(HomeActivity.this);
+                            TextView time = new TextView(HomeActivity.this);
+                            TextView username = new TextView(HomeActivity.this);
+
+                            cardView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                            linearLayoutInside.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT,CardView.LayoutParams.WRAP_CONTENT));
+                            time.setLayoutParams(new LinearLayout.LayoutParams(150,150));
+                            username.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+
+
+                            cardView.setCardBackgroundColor(ContextCompat.getColor(HomeActivity.this,R.color.colorPrimary));
+                            username.setTextColor(ContextCompat.getColor(HomeActivity.this,R.color.colorAccent));
+
+
+                            ViewGroup.MarginLayoutParams cardViewMarginParams = (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+                            cardViewMarginParams.setMargins(30,30,30,30);
+                            cardView.requestLayout();
+
+                            username.setTextSize(50);
+
+
+                            username.setText(p.name);
+                            time.setText(p.time);
+                            linearLayoutInside.setOrientation(LinearLayout.HORIZONTAL);
+
+                            linearLayoutInside.addView(time,0);
+                            linearLayoutInside.addView(username,1);
+
+                            cardView.addView(linearLayoutInside);
+
+                            l.addView(cardView);
+
+
+
                         }
                     }
 
@@ -137,7 +186,7 @@ public class HomeActivity extends FragmentActivity {
             String time = ((EditText)riderActivity.findViewById(R.id.arrivalTime)).getText().toString();
             int numberOfPeople = Integer.parseInt(((EditText)riderActivity.findViewById(R.id.numberOfPeople)).getText().toString());
 
-            databaseReference.push().setValue(new PickUpRequest(time,mAuth.getCurrentUser().getDisplayName(),mAuth.getCurrentUser().getPhotoUrl().toString(),numberOfPeople,(float)address.getLatitude(),(float)address.getLongitude()));
+            databaseReference.push().setValue(new DatabaseObjects().new PickUpRequest(time,mAuth.getCurrentUser().getDisplayName(),numberOfPeople,(float)address.getLatitude(),(float)address.getLongitude()));
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.mkrolak;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -13,12 +14,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthActionCodeException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,6 +36,7 @@ public class MainActivity extends FragmentActivity {
     private boolean signup = false;
 
     FirebaseAuth mAuth;
+    FirebaseDatabase database;
 
     public ViewPager mPager;
     public ScreenSlidePagerAdapter mPagerAdapter;
@@ -66,8 +72,8 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-         mAuth = FirebaseAuth.getInstance();
-
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
     }
 
@@ -84,8 +90,8 @@ public class MainActivity extends FragmentActivity {
     public void continueToNext(View v){
         if(mPager.getCurrentItem()+1 != LAYOUT_ARRAY.length){
             if(mPager.getCurrentItem()+1 == maxSlide){
-                ((LoginFragment)((ScreenSlidePagerAdapter)mPagerAdapter).getItem(mPager.getCurrentItem())).saveInfo();
-                ((ScreenSlidePagerAdapter)mPagerAdapter).addElement(new LoginFragment(LAYOUT_ARRAY[maxSlide]));
+                ((LoginFragment)mPagerAdapter.getItem(mPager.getCurrentItem())).saveInfo();
+                mPagerAdapter.addElement(new LoginFragment(LAYOUT_ARRAY[maxSlide]));
                 maxSlide++;
             }
             mPager.setCurrentItem(mPager.getCurrentItem()+1);
@@ -99,7 +105,7 @@ public class MainActivity extends FragmentActivity {
         continueToNext(v);
     }
 
-    public void continueSignUp(View v){
+    public void continueSignUp(final View v){
         String email = ((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo()));
         String password = (((LoginFragment)(mPagerAdapter).getItem(2)).getInfo());
         if(email.length() == 0 || password.length() == 0)return;//TODO:make say please fill in.
@@ -113,11 +119,15 @@ public class MainActivity extends FragmentActivity {
                     if (task.isSuccessful()) {
 
 
-                        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).setPhotoUri( Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.user0) + '/' + resources.getResourceTypeName(R.drawable.user0) + "/user" + (int)(Math.random()*24) +".png" )).build();
+                        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).build();
+                        database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).push().setValue(new DatabaseObjects().new DatabaseUser(Color.valueOf((int)(256*Math.random()),(int)(256*Math.random()),(int)(256*Math.random())).toString(),ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.user0) + '/' + resources.getResourceTypeName(R.drawable.user0) + "/user" + (int)(Math.random()*24) +".png"));
                         mAuth.getCurrentUser().updateProfile(userProfileChangeRequest);
                         verifyEmail();
 
-
+                    }else if(task.getException().getClass().equals(FirebaseAuthUserCollisionException.class)){
+                        //This if statement might not be secure TODO:CHECK
+                        signup = false;
+                        continueSignUp(v);
                     }
                 }
             });
@@ -149,7 +159,7 @@ public class MainActivity extends FragmentActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     ((TextView)(mPagerAdapter).getItem(3).getView().findViewById(R.id.verifyName)).setText("Please confirm the verification message that was sent to your cps email");
-
+                    mPagerAdapter.getItem(mPager.getCurrentItem()).getView().findViewById(R.id.verifyButton).setVisibility(View.VISIBLE);
 
                 }
 
