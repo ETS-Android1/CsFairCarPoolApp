@@ -30,7 +30,9 @@
     <style name="WhiteEditText" parent="BaseTextTheme">
         <item name="android:textAlignment">center</item>
         <item name="android:colorAccent">@android:color/black</item>
+
     </style>
+
 
     <style name="BaseTextTheme" parent="Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:fontFamily">@font/montserrat</item>
@@ -41,6 +43,7 @@
 
     <style name="inlineBox">
         <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="cardBackgroundColor">@color/colorPrimaryLight</item>
     </style>
 
     <style name="infoTextView" parent="BaseTextTheme">

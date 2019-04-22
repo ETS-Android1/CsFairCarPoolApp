@@ -46,7 +46,6 @@ public class EditProfileActivity extends FragmentActivity {
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(),LAYOUT_ARRAY);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPagingEnabled(false);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         ((LoginFragment)mPagerAdapter.getItem(0)).setOnStartListener(new OnStartListener() {
             @Override

@@ -1,28 +1,25 @@
 package com.mkrolak;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthActionCodeException;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,6 +47,12 @@ public class MainActivity extends FragmentActivity {
         FirebaseApp.initializeApp(this);
         FirebaseAuth.getInstance();
         FirebaseDatabase.getInstance();
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+        }
+
 
         if(FirebaseAuth.getInstance().getCurrentUser()!=null && FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()){
             startActivity(new Intent(MainActivity.this,HomeActivity.class));
@@ -120,7 +123,7 @@ public class MainActivity extends FragmentActivity {
 
 
                         UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).build();
-                        database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).push().setValue(new DatabaseObjects().new DatabaseUser(Color.valueOf((int)(256*Math.random()),(int)(256*Math.random()),(int)(256*Math.random())).toString(),ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.user0) + '/' + resources.getResourceTypeName(R.drawable.user0) + "/user" + (int)(Math.random()*24) +".png"));
+                        database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).child((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).push().setValue(new DatabaseUser((""+(int)(256*Math.random())+","+(int)(256*Math.random())+","+(int)(256*Math.random())),(int)(Math.random()*24)));
                         mAuth.getCurrentUser().updateProfile(userProfileChangeRequest);
                         verifyEmail();
 

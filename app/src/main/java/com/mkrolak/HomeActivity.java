@@ -1,50 +1,79 @@
 package com.mkrolak;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class HomeActivity extends FragmentActivity {
 
     private int[] LAYOUT_ARRAY;
     private String[] LAYOUT_TAGS;
+    private float[] currentLocation = {0,0};
 
     private TabLayout tabLayout;
 
     private ViewPager mPager;
     private ScreenSlidePagerAdapter mPagerAdapter;
+    private FusedLocationProviderClient fusedLocationClient;
 
-    public String RIDER_REFERENCE = "RiderReference";
+    public static final String RIDER_REFERENCE = "RiderReference";
+    public static final String REQUEST_REFERENCE = "GetRiderReference";
 
     FirebaseDatabase database;
     FirebaseAuth mAuth;
+    FirebaseFunctions functions;
 
     DatabaseReference databaseReference;
 
@@ -52,9 +81,13 @@ public class HomeActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseAuth.getInstance();
-        FirebaseDatabase.getInstance();
+        FirebaseFunctions.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
         setContentView(R.layout.activity_home);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 
 
@@ -87,7 +120,22 @@ public class HomeActivity extends FragmentActivity {
         ((LoginFragment)mPagerAdapter.getItem(1)).setOnStartListener(new OnStartListener() {
             @Override
             public void onStart(View v) {
-                ((ImageView)mPagerAdapter.getItem(1).getView().findViewById(R.id.profilePic)).setImageResource(ProfilePictures.getPictureDrawableFromUri(mAuth.getCurrentUser().getPhotoUrl()));
+                database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).child(mAuth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                            ((ImageView)mPagerAdapter.getItem(1).getView().findViewById(R.id.profilePic)).setImageResource(ProfilePictures.getPictureDrawableFromInt(dataSnapshot1.getValue(DatabaseUser.class).photoUri));
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 ((TextView)findViewById(R.id.username)).setText(mAuth.getCurrentUser().getDisplayName());
                 ((TextView)findViewById(R.id.email)).setText(mAuth.getCurrentUser().getEmail());
             }
@@ -100,40 +148,117 @@ public class HomeActivity extends FragmentActivity {
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot data : dataSnapshot.getChildren()){
-                            DatabaseObjects.PickUpRequest p = data.getValue(DatabaseObjects.PickUpRequest.class);
+                        for(final DataSnapshot data : dataSnapshot.getChildren()){
+                            final PickUpRequest p = data.getValue(PickUpRequest.class);
                             LinearLayout l = v.findViewById(R.id.searchLayout);
 
                             CardView cardView = new CardView(HomeActivity.this);
                             LinearLayout linearLayoutInside = new LinearLayout(HomeActivity.this);
+                            final LinearLayout linearLayoutPicture = new LinearLayout(HomeActivity.this);
+                            final ImageView profilePic = new ImageView(HomeActivity.this);
                             TextView time = new TextView(HomeActivity.this);
                             TextView username = new TextView(HomeActivity.this);
+                            final TextView extraTime = new TextView(HomeActivity.this);
+
+                            profilePic.setLayoutParams(new LinearLayout.LayoutParams(150,150));
 
                             cardView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-                            linearLayoutInside.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT,CardView.LayoutParams.WRAP_CONTENT));
-                            time.setLayoutParams(new LinearLayout.LayoutParams(150,150));
-                            username.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                            linearLayoutInside.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,CardView.LayoutParams.WRAP_CONTENT));
+                            linearLayoutPicture.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                            username.setLayoutParams(new LinearLayout.LayoutParams(150,LinearLayout.LayoutParams.WRAP_CONTENT));
+                            time.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                            extraTime.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+
+
+                            database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).child(p.name).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                                        DatabaseUser user = dataSnapshot1.getValue(DatabaseUser.class);
+                                        profilePic.setImageResource(ProfilePictures.getPictureDrawableFromInt(user.photoUri));
+                                        linearLayoutPicture.setBackgroundColor(Color.parseColor(user.getColorInHex()));
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
 
 
                             cardView.setCardBackgroundColor(ContextCompat.getColor(HomeActivity.this,R.color.colorPrimary));
-                            username.setTextColor(ContextCompat.getColor(HomeActivity.this,R.color.colorAccent));
+
+                            time.setTextAppearance(R.style.infoTextView);
+                            username.s(R.style.infoTextView);
+                            extraTime.setTextAppearance(R.style.infoTextView);
+
+                            linearLayoutInside.setGravity(Gravity.RIGHT);
 
 
                             ViewGroup.MarginLayoutParams cardViewMarginParams = (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
                             cardViewMarginParams.setMargins(30,30,30,30);
                             cardView.requestLayout();
 
-                            username.setTextSize(50);
+                            time.setTextSize(50);
 
 
                             username.setText(p.name);
                             time.setText(p.time);
-                            linearLayoutInside.setOrientation(LinearLayout.HORIZONTAL);
 
-                            linearLayoutInside.addView(time,0);
-                            linearLayoutInside.addView(username,1);
+
+                            if (ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                                fusedLocationClient.getLastLocation()
+                                        .addOnSuccessListener(HomeActivity.this, new OnSuccessListener<Location>() {
+                                            @Override
+                                            public void onSuccess(Location location) {
+                                                // Got last known location. In some rare situations this can be null.
+                                                if (location != null) {
+                                                    currentLocation = new float[]{(float)location.getLatitude(),(float)location.getLongitude()};
+
+                                                    Task<String> timeTask = getExtraTime(p.latOfPerson,p.lonOfPerson);
+                                                    if(timeTask!=null){
+                                                        timeTask.addOnCompleteListener(new OnCompleteListener<String>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<String> task) {
+                                                                if(task.isSuccessful()){
+                                                                    String[] s = task.getResult().split(",");
+                                                                    extraTime.setText(""+((-Integer.parseInt(s[1])+Integer.parseInt(s[0])+Integer.parseInt(s[3]))/60)+" Minutes Extra");
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        });
+                            }
+
+
+                            linearLayoutPicture.addView(profilePic,0);
+                            linearLayoutPicture.addView(username,1);
+
+
+
+
+                            linearLayoutInside.setOrientation(LinearLayout.HORIZONTAL);
+                            linearLayoutPicture.setOrientation(LinearLayout.VERTICAL);
+
+                            linearLayoutInside.addView(linearLayoutPicture,0);
+                            linearLayoutInside.addView(time,1);
+                            linearLayoutInside.addView(extraTime,2);
 
                             cardView.addView(linearLayoutInside);
+
+                            l.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    startActivity(new Intent(HomeActivity.this, RequestActivity.class).putExtra(REQUEST_REFERENCE,data.getKey()));
+                                }
+                            });
 
                             l.addView(cardView);
 
@@ -169,8 +294,8 @@ public class HomeActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
+
+        functions = FirebaseFunctions.getInstance();
         databaseReference = database.getReference(RIDER_REFERENCE);
 
 
@@ -186,7 +311,7 @@ public class HomeActivity extends FragmentActivity {
             String time = ((EditText)riderActivity.findViewById(R.id.arrivalTime)).getText().toString();
             int numberOfPeople = Integer.parseInt(((EditText)riderActivity.findViewById(R.id.numberOfPeople)).getText().toString());
 
-            databaseReference.push().setValue(new DatabaseObjects().new PickUpRequest(time,mAuth.getCurrentUser().getDisplayName(),numberOfPeople,(float)address.getLatitude(),(float)address.getLongitude()));
+            databaseReference.push().setValue(new PickUpRequest(time,mAuth.getCurrentUser().getDisplayName(),numberOfPeople,(float)address.getLatitude(),(float)address.getLongitude()));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -194,6 +319,31 @@ public class HomeActivity extends FragmentActivity {
 
 
 
+    }
+
+    private Task<String> getExtraTime(float tempLat, float tempLon){
+        if(currentLocation[0]!=currentLocation[1]){
+            Map<String, Object> data = new HashMap<>();
+            data.put("destination", ""+tempLat+","+tempLon);
+            data.put("location", ""+currentLocation[0]+","+currentLocation[1]);
+            data.put("post", true);
+
+            return functions
+                    .getHttpsCallable("getExtraTime")
+                    .call(data)
+                    .continueWith(new Continuation<HttpsCallableResult, String>() {
+                        @Override
+                        public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                            // This continuation runs on either success or failure, but if the task
+                            // has failed then getResult() will throw an Exception which will be
+                            // propagated down.
+                            String result =(String) ((Map) task.getResult().getData()).get("result");
+
+                            return result;
+                        }
+                    });
+        }
+        return null;
     }
 
 

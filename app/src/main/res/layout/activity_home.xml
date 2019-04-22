@@ -3,6 +3,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homeLayout"
     style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,32 +24,37 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
-        style="@style/AppTheme"
         android:layout_width="0dp"
         android:layout_height="62dp"
+        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:tabBackground="@android:color/holo_green_dark"
-        app:tabIndicatorColor="@android:color/holo_orange_light"
+        app:tabBackground="@color/colorPrimary"
+        app:tabIndicatorColor="@color/colorPrimaryDark"
         app:tabIndicatorGravity="top"
         app:tabMode="fixed"
-        app:tabTextAppearance="@style/TextAppearance.AppCompat.Title"
-        app:tabTextColor="@android:color/background_light">
+        app:tabTextAppearance="@style/TextAppearance.AppCompat"
+        app:tabTextColor="@android:color/black">
 
         <android.support.design.widget.TabItem
+            style="@style/BaseTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:text="Rider" />
 
         <android.support.design.widget.TabItem
+            style="BaseTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:text="Profile" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:text="Driver" />
     </android.support.design.widget.TabLayout>
 
