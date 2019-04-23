@@ -8,6 +8,7 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView2"
+        style="@style/topBox"
         android:layout_width="0dp"
         android:layout_height="178dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,12 +17,14 @@
 
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mapView"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mapView"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/acceptButton"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2"
+        tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
 
     <Button
         android:id="@+id/acceptButton"

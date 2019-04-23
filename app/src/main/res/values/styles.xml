@@ -6,7 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:background">@color/colorAccent</item>
+        <item name="android:background">@android:color/transparent</item>
+
     </style>
 
 
@@ -44,6 +45,7 @@
     <style name="inlineBox">
         <item name="android:background">@color/colorPrimaryLight</item>
         <item name="cardBackgroundColor">@color/colorPrimaryLight</item>
+        <item name="android:padding">10dp</item>
     </style>
 
     <style name="infoTextView" parent="BaseTextTheme">
@@ -57,9 +59,16 @@
 
     <style name="YellowButton" parent="BaseTextTheme">
         <item name="android:textAlignment">center</item>
+        <item name="android:layout_weight">1.0</item>
+
+
 
         <item name="android:background">@color/colorSecondary</item>
         <item name="android:colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="topBox" parent="inlineBox">
+        <item name="android:padding">0dp</item>
     </style>
 
 

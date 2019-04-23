@@ -7,8 +7,6 @@
     style="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_green_light"
-    android:backgroundTint="@android:color/holo_green_light"
     tools:context=".HomeActivity">
 
     <android.support.v4.view.ViewPager
@@ -38,18 +36,18 @@
         app:tabTextColor="@android:color/black">
 
         <android.support.design.widget.TabItem
-            style="@style/BaseTextTheme"
+            style="@style/infoTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="Rider" />
+            android:background="@drawable/taxi"
+            android:icon="@drawable/taxi" />
 
         <android.support.design.widget.TabItem
             style="BaseTextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:text="Profile" />
+            android:icon="@drawable/account" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"

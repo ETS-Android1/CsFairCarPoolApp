@@ -9,15 +9,14 @@
 
     <LinearLayout
         style="@style/inlineBox"
-        android:layout_width="265dp"
+        android:layout_width="285dp"
         android:layout_height="167dp"
         android:layout_marginStart="98dp"
-        android:layout_marginTop="149dp"
+        android:layout_marginTop="150dp"
         android:layout_marginEnd="98dp"
         android:layout_marginBottom="259dp"
         android:gravity="fill"
         android:orientation="vertical"
-        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

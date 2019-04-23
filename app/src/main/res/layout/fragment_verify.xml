@@ -8,8 +8,8 @@
 
     <TextView
         android:id="@+id/verifyName"
-        android:layout_width="156dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="46dp"
         android:layout_marginStart="205dp"
         android:layout_marginTop="232dp"
         android:layout_marginEnd="206dp"
@@ -23,8 +23,8 @@
     <Button
         android:id="@+id/verifyButton"
         style="@style/YellowButton"
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="57dp"
         android:layout_marginStart="106dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="106dp"

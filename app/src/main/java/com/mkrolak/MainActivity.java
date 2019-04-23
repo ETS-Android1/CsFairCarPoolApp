@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -121,10 +122,10 @@ public class MainActivity extends FragmentActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
 
-
-                        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).build();
-                        database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).child((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).push().setValue(new DatabaseUser((""+(int)(256*Math.random())+","+(int)(256*Math.random())+","+(int)(256*Math.random())),(int)(Math.random()*24)));
+                        int profilePic = (int)(Math.random()*24);
+                        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).setDisplayName((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).setPhotoUri( Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.user0) + '/' + resources.getResourceTypeName(R.drawable.user0) + "/user" + profilePic )).build();
                         mAuth.getCurrentUser().updateProfile(userProfileChangeRequest);
+                        database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).child((((LoginFragment)(mPagerAdapter).getItem(1)).getInfo())).push().setValue(new DatabaseUser((""+(int)(256*Math.random())+","+(int)(256*Math.random())+","+(int)(256*Math.random())),profilePic));
                         verifyEmail();
 
                     }else if(task.getException().getClass().equals(FirebaseAuthUserCollisionException.class)){

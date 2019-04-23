@@ -3,6 +3,7 @@ package com.mkrolak;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -59,7 +60,7 @@ import java.util.Map;
 public class HomeActivity extends FragmentActivity {
 
     private int[] LAYOUT_ARRAY;
-    private String[] LAYOUT_TAGS;
+    private int[] LAYOUT_TAGS;
     private float[] currentLocation = {0,0};
 
     private TabLayout tabLayout;
@@ -94,7 +95,7 @@ public class HomeActivity extends FragmentActivity {
 
 
         LAYOUT_ARRAY = new int[]{R.layout.fragment_rider,R.layout.fragment_profile,R.layout.fragment_driver};
-        LAYOUT_TAGS = new String[]{"Rider","Profile","Driver"};
+        LAYOUT_TAGS = new int[]{R.drawable.taxi,R.drawable.account,R.drawable.car};
         tabLayout = findViewById(R.id.tabLayout);
 
         mPager = findViewById(R.id.pager);
@@ -104,7 +105,7 @@ public class HomeActivity extends FragmentActivity {
 
         tabLayout.setupWithViewPager(mPager);
         for(int i = 0; i < LAYOUT_ARRAY.length; i++){
-            tabLayout.getTabAt(i).setText(LAYOUT_TAGS[i]);
+            tabLayout.getTabAt(i).setIcon(LAYOUT_TAGS[i]);
 
         }
         mPager.setCurrentItem(1);
@@ -120,22 +121,7 @@ public class HomeActivity extends FragmentActivity {
         ((LoginFragment)mPagerAdapter.getItem(1)).setOnStartListener(new OnStartListener() {
             @Override
             public void onStart(View v) {
-                database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).child(mAuth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                            ((ImageView)mPagerAdapter.getItem(1).getView().findViewById(R.id.profilePic)).setImageResource(ProfilePictures.getPictureDrawableFromInt(dataSnapshot1.getValue(DatabaseUser.class).photoUri));
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
+                ((ImageView)findViewById(R.id.profilePic)).setImageResource(ProfilePictures.getPictureDrawableFromUri(mAuth.getCurrentUser().getPhotoUrl()));
                 ((TextView)findViewById(R.id.username)).setText(mAuth.getCurrentUser().getDisplayName());
                 ((TextView)findViewById(R.id.email)).setText(mAuth.getCurrentUser().getEmail());
             }
@@ -154,22 +140,19 @@ public class HomeActivity extends FragmentActivity {
 
                             CardView cardView = new CardView(HomeActivity.this);
                             LinearLayout linearLayoutInside = new LinearLayout(HomeActivity.this);
-                            final LinearLayout linearLayoutPicture = new LinearLayout(HomeActivity.this);
                             final ImageView profilePic = new ImageView(HomeActivity.this);
                             TextView time = new TextView(HomeActivity.this);
-                            TextView username = new TextView(HomeActivity.this);
                             final TextView extraTime = new TextView(HomeActivity.this);
 
-                            profilePic.setLayoutParams(new LinearLayout.LayoutParams(150,150));
+                            profilePic.setLayoutParams(new LinearLayout.LayoutParams(200,200));
 
                             cardView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                            linearLayoutInside.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,CardView.LayoutParams.WRAP_CONTENT));
-                            linearLayoutPicture.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                            linearLayoutInside.setLayoutParams(new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT,CardView.LayoutParams.MATCH_PARENT));
 
-                            username.setLayoutParams(new LinearLayout.LayoutParams(150,LinearLayout.LayoutParams.WRAP_CONTENT));
+
                             time.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-                            extraTime.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                            extraTime.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT,1.0f));
 
 
                             database.getReference(getString(R.string.USERS_DATABASE_REFERENCE)).child(p.name).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -178,7 +161,7 @@ public class HomeActivity extends FragmentActivity {
                                     for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                                         DatabaseUser user = dataSnapshot1.getValue(DatabaseUser.class);
                                         profilePic.setImageResource(ProfilePictures.getPictureDrawableFromInt(user.photoUri));
-                                        linearLayoutPicture.setBackgroundColor(Color.parseColor(user.getColorInHex()));
+                                        profilePic.setBackgroundColor(Color.parseColor(user.getColorInHex()));
                                     }
 
                                 }
@@ -190,13 +173,17 @@ public class HomeActivity extends FragmentActivity {
                             });
 
 
-                            cardView.setCardBackgroundColor(ContextCompat.getColor(HomeActivity.this,R.color.colorPrimary));
+                            linearLayoutInside.setBackgroundColor(ContextCompat.getColor(HomeActivity.this,R.color.colorPrimary));
+
+
 
                             time.setTextAppearance(R.style.infoTextView);
-                            username.s(R.style.infoTextView);
                             extraTime.setTextAppearance(R.style.infoTextView);
 
-                            linearLayoutInside.setGravity(Gravity.RIGHT);
+                            time.setBackgroundColor(Color.parseColor("#00ff0000"));
+                            extraTime.setBackgroundColor(Color.parseColor("#00ff0000"));
+
+                            extraTime.setGravity(Gravity.RIGHT);
 
 
                             ViewGroup.MarginLayoutParams cardViewMarginParams = (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
@@ -204,9 +191,9 @@ public class HomeActivity extends FragmentActivity {
                             cardView.requestLayout();
 
                             time.setTextSize(50);
+                            extraTime.setTextSize(50);
 
 
-                            username.setText(p.name);
                             time.setText(p.time);
 
 
@@ -238,22 +225,21 @@ public class HomeActivity extends FragmentActivity {
                             }
 
 
-                            linearLayoutPicture.addView(profilePic,0);
-                            linearLayoutPicture.addView(username,1);
+
 
 
 
 
                             linearLayoutInside.setOrientation(LinearLayout.HORIZONTAL);
-                            linearLayoutPicture.setOrientation(LinearLayout.VERTICAL);
 
-                            linearLayoutInside.addView(linearLayoutPicture,0);
+
+                            linearLayoutInside.addView(profilePic,0);
                             linearLayoutInside.addView(time,1);
                             linearLayoutInside.addView(extraTime,2);
 
                             cardView.addView(linearLayoutInside);
 
-                            l.setOnClickListener(new View.OnClickListener() {
+                            cardView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     startActivity(new Intent(HomeActivity.this, RequestActivity.class).putExtra(REQUEST_REFERENCE,data.getKey()));

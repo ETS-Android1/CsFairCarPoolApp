@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_green_light"
     android:orientation="vertical"
     android:tag="Driver">
 
     <SearchView
         android:id="@+id/searchView"
-        style="@android:style/Widget.Material.Light.SearchView"
         android:layout_width="match_parent"
-        android:layout_height="43dp">
+        android:layout_height="50dp"
+        android:layout_margin="30dp"
+        android:background="@color/colorSecondary">
 
     </SearchView>
 
